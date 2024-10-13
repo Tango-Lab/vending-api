@@ -1,0 +1,30 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "node": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:prettier/recommended" // Enable eslint-plugin-prettier
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 12,
+    "sourceType": "module"
+  },
+  "plugins": ["@typescript-eslint"],
+  "rules": {
+    "semi": ["error", "always"], // Corresponds to "semi": true
+    "quotes": ["error", "single"], // Corresponds to "singleQuote": true
+    "comma-dangle": ["error", "always-multiline"], // Corresponds to "trailingComma": "all"
+    "max-len": [
+      "error",
+      {
+        "code": 80
+      }
+    ], // Corresponds to "printWidth": 80
+    "indent": ["error", 2], // Corresponds to "tabWidth": 2
+    "linebreak-style": ["error", "auto"] // Corresponds to "endOfLine": "auto"
+  }
+}

@@ -1,0 +1,64 @@
+import { injectable } from 'inversify';
+import { ClientSession, FilterQuery } from 'mongoose';
+
+import { BadRequestError } from '../../packages';
+import { BaseService, BaseServiceImpl } from '../base/BaseService';
+import { IOrderItem } from '../models';
+import MachineSlot, { IMachineSlot } from '../models/MachineSlot';
+
+export interface MachineSlotService extends BaseService<IMachineSlot> {
+  getAllWithPopulated: (
+    query?: FilterQuery<IMachineSlot>,
+    populated?: string | string[],
+  ) => Promise<IMachineSlot[]>;
+  updateAvailableQuantity: (
+    machine: string,
+    orderItems: IOrderItem[],
+    session?: ClientSession,
+  ) => Promise<void>;
+}
+
+@injectable()
+export class MachineSlotServiceImpl extends BaseServiceImpl<IMachineSlot> {
+  model = MachineSlot;
+
+  constructor() {
+    super();
+  }
+
+  async updateAvailableQuantity(
+    machine: string,
+    orderItems: IOrderItem[],
+    session?: ClientSession,
+  ) {
+    for (const item of orderItems) {
+      // Find the corresponding machine slot
+      let machineSlot = await MachineSlot.findOne({
+        machine,
+        slotNo: item.slotNo,
+        product: item.product,
+      });
+
+      if (machineSlot) {
+        // Update the availableQuantity by subtracting the ordered quantity
+        machineSlot.availableQuantity -= item.quantity;
+
+        // Ensure availableQuantity is not less than 0
+        if (machineSlot.availableQuantity < 0) {
+          throw new BadRequestError(`Insufficient stock in slot ${item.slotNo}`);
+        }
+
+        // Save the updated machine slot
+        await machineSlot.save({ session });
+      }
+    }
+  }
+
+  async getAllWithPopulated(query?: FilterQuery<IMachineSlot>, populated = ['machine', 'product']) {
+    const data = await this.model
+      .find({ ...query })
+      .sort({ slotNo: 1 })
+      .populate(populated);
+    return data;
+  }
+}
