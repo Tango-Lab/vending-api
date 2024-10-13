@@ -88,13 +88,7 @@ export class BaseServiceImpl<T extends Document> implements BaseService<T> {
       Object.assign(filter, query);
     }
 
-    const data = await this.model
-      .find(filter)
-      .populate(populated)
-      .sort(orderObject)
-      .skip(offset)
-      .limit(limit)
-      .exec();
+    const data = await this.model.find(filter).populate(populated).sort(orderObject).skip(offset).limit(limit).exec();
     const total = await this.model.countDocuments(filter).exec();
 
     const response = await new Paginator<T>(data, total, offset, limit).paginate();

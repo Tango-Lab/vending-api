@@ -15,7 +15,11 @@ export interface IPaymentParam {
   note: string;
 }
 
-export function validatePaymentParam(req: express.Request<any, any, IPaymentParam>, _R: express.Response, next: express.NextFunction) {
+export function validatePaymentParam(
+  req: express.Request<any, any, IPaymentParam>,
+  _R: express.Response,
+  next: express.NextFunction,
+) {
   try {
     const rules: ValidationRulesMap<IPaymentParam> = {
       machine: { isRequired: true, isObjectId: true, type: 'string' },

@@ -7,15 +7,8 @@ import { IOrderItem } from '../models';
 import MachineSlot, { IMachineSlot } from '../models/MachineSlot';
 
 export interface MachineSlotService extends BaseService<IMachineSlot> {
-  getAllWithPopulated: (
-    query?: FilterQuery<IMachineSlot>,
-    populated?: string | string[],
-  ) => Promise<IMachineSlot[]>;
-  updateAvailableQuantity: (
-    machine: string,
-    orderItems: IOrderItem[],
-    session?: ClientSession,
-  ) => Promise<void>;
+  getAllWithPopulated: (query?: FilterQuery<IMachineSlot>, populated?: string | string[]) => Promise<IMachineSlot[]>;
+  updateAvailableQuantity: (machine: string, orderItems: IOrderItem[], session?: ClientSession) => Promise<void>;
 }
 
 @injectable()
@@ -26,11 +19,7 @@ export class MachineSlotServiceImpl extends BaseServiceImpl<IMachineSlot> {
     super();
   }
 
-  async updateAvailableQuantity(
-    machine: string,
-    orderItems: IOrderItem[],
-    session?: ClientSession,
-  ) {
+  async updateAvailableQuantity(machine: string, orderItems: IOrderItem[], session?: ClientSession) {
     for (const item of orderItems) {
       // Find the corresponding machine slot
       let machineSlot = await MachineSlot.findOne({

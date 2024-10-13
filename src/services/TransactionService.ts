@@ -16,11 +16,7 @@ import { ITransaction, Transaction } from '../models/Transaction';
 import { SerialPrefixService } from './SerialPrefixService';
 
 export interface TransactionService extends BaseService<ITransaction> {
-  createBakongPayment: (
-    order: IOrder,
-    bodyParam: Partial<IPaymentParam>,
-    ip: string,
-  ) => Promise<ITransaction>;
+  createBakongPayment: (order: IOrder, bodyParam: Partial<IPaymentParam>, ip: string) => Promise<ITransaction>;
   singTransactionIsCompleted: (
     trxId: string,
     paymentInfo: AccountTransactionData,
@@ -39,11 +35,7 @@ export class TransactionServiceImpl extends BaseServiceImpl<ITransaction> {
     super();
   }
 
-  async singTransactionIsCompleted(
-    trxId: string,
-    paymentInfo: AccountTransactionData,
-    session?: ClientSession,
-  ) {
+  async singTransactionIsCompleted(trxId: string, paymentInfo: AccountTransactionData, session?: ClientSession) {
     const info: Partial<ITransaction> = {
       status: TransactionStatus.Completed,
       paymentInfo,
@@ -56,18 +48,10 @@ export class TransactionServiceImpl extends BaseServiceImpl<ITransaction> {
     return transaction;
   }
 
-  async createBakongPayment(
-    order: IOrder,
-    bodyParam: IPaymentParam,
-    ip: string,
-  ): Promise<ITransaction> {
+  async createBakongPayment(order: IOrder, bodyParam: IPaymentParam, ip: string): Promise<ITransaction> {
     const result = await new TransactionManager().runs(async (session) => {
       const { note } = bodyParam;
-      const { prefixCode } = await this.prefixSv.retrieveOrGenerateSerialPrefix(
-        'Transaction',
-        'T',
-        session,
-      );
+      const { prefixCode } = await this.prefixSv.retrieveOrGenerateSerialPrefix('Transaction', 'T', session);
       const bakong = new BakongPaymentSDK({
         transactionNo: prefixCode,
         amount: order.totalAmount,

@@ -60,29 +60,27 @@ class Server {
     });
 
     // catch exceptions
-    this.#app.use(
-      (err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
-        // Handle known exceptions
-        if (err instanceof HttpError) {
-          const httpError = err;
-          return res.status(httpError.statusCode).json(httpError.toJSON());
-        }
+    this.#app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+      // Handle known exceptions
+      if (err instanceof HttpError) {
+        const httpError = err;
+        return res.status(httpError.statusCode).json(httpError.toJSON());
+      }
 
-        if (err instanceof mongoose.Error.ValidationError) {
-          // Handle Mongoose validation errors
-          const missingField = Object.keys(err.errors)[0]; // Get the first missing field
-          const error = new MissingParamError(missingField);
-          return res.status(error.statusCode).json(error.toJSON()); // Throw your custom error
-        }
+      if (err instanceof mongoose.Error.ValidationError) {
+        // Handle Mongoose validation errors
+        const missingField = Object.keys(err.errors)[0]; // Get the first missing field
+        const error = new MissingParamError(missingField);
+        return res.status(error.statusCode).json(error.toJSON()); // Throw your custom error
+      }
 
-        // Handle uncaught or unknown exceptions
-        if (err instanceof Error) {
-          const error = new InternalServerError(`Uncaught Exception: ${err.message}`);
-          return res.status(ErrorCode.InternalServerError).json(error.toJSON());
-        }
-        next(err);
-      },
-    );
+      // Handle uncaught or unknown exceptions
+      if (err instanceof Error) {
+        const error = new InternalServerError(`Uncaught Exception: ${err.message}`);
+        return res.status(ErrorCode.InternalServerError).json(error.toJSON());
+      }
+      next(err);
+    });
   }
 
   public start() {
@@ -90,11 +88,7 @@ class Server {
       .then(() => {
         this.#app.listen(this.#app.get('port'), () => {
           this.#routes();
-          console.log(
-            'App is running at http://localhost:%d in %s mode',
-            this.#app.get('port'),
-            this.#app.get('env'),
-          );
+          console.log('App is running at http://localhost:%d in %s mode', this.#app.get('port'), this.#app.get('env'));
           console.log('Database Connected!');
           console.log('Press CTRL-C to stop\n');
         });

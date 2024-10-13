@@ -7,7 +7,11 @@ import { Currency } from '../enums/Currency';
 import { ErrorCode } from '../enums/ErrorCode';
 import { OrderStatus } from '../enums/Order';
 import { ExpressHelper, OrderRequestParams } from '../helpers';
-import { ensureVendingMachineIsAvailable, validateCancelOrderParam, validateOrderParam } from '../middlewares/VendingMachine';
+import {
+  ensureVendingMachineIsAvailable,
+  validateCancelOrderParam,
+  validateOrderParam,
+} from '../middlewares/VendingMachine';
 import { IOrder } from '../models';
 import { MachineService, MachineSlotService, OrderService } from '../services';
 import { Pagination } from '../utils/Pagination';
@@ -57,7 +61,9 @@ export class OrderController {
       throw new NotFoundError('This vending machine does not existed.', ErrorCode.VendingMachineDoesNoExisted);
     }
 
-    const machineSlots = await this.machineSlotSv.getAll({ machine: machine.id });
+    const machineSlots = await this.machineSlotSv.getAll({
+      machine: machine.id,
+    });
     if (!machineSlots.length) {
       throw new NotFoundError('This vending machine does not existed.', ErrorCode.VendingMachineDoesNoExisted);
     }

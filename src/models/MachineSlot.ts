@@ -96,9 +96,6 @@ const MachineSlotSchema: Schema<IMachineSlot> = new Schema(
 );
 
 // Create the MachineSlot model
-const MachineSlot: Model<IMachineSlot> = mongoose.model<IMachineSlot>(
-  'MachineSlot',
-  MachineSlotSchema,
-);
+const MachineSlot: Model<IMachineSlot> = mongoose.model<IMachineSlot>('MachineSlot', MachineSlotSchema);
 
 export default MachineSlot;

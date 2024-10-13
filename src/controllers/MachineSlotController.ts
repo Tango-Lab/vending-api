@@ -37,10 +37,7 @@ export class MachineSlotController {
   @GET('/v1/admin/list')
   async getAllForAdmin(@ContextRequest request: Request<any, any, IMachineSlot>) {
     const pagination = new Pagination(request).getParam();
-    const list = await this.machineSlotSv.getAllWithPagination(pagination, {}, {}, [
-      'machine',
-      'product',
-    ]);
+    const list = await this.machineSlotSv.getAllWithPagination(pagination, {}, {}, ['machine', 'product']);
     return list;
   }
 

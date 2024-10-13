@@ -97,9 +97,7 @@ export async function verifyPurchaseBeforePayment(
       orderStatus: OrderStatus.Pending,
     });
     if (!order) {
-      throw new BadRequestError(
-        'You must purchase an item before completing the payment for this vending machine',
-      );
+      throw new BadRequestError('You must purchase an item before completing the payment for this vending machine');
     }
     req.orderId = order.id;
 

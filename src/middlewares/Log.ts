@@ -1,10 +1,6 @@
 import express, { NextFunction, Request, Response } from 'express';
 
-export async function loggerA(
-  _: express.Request,
-  _R: express.Response,
-  next: express.NextFunction,
-): Promise<void> {
+export async function loggerA(_: express.Request, _R: express.Response, next: express.NextFunction): Promise<void> {
   try {
     console.log('======LOGGER A======');
     next();
@@ -13,11 +9,7 @@ export async function loggerA(
   }
 }
 
-export async function loggerB(
-  _: express.Request,
-  _R: express.Response,
-  next: express.NextFunction,
-) {
+export async function loggerB(_: express.Request, _R: express.Response, next: express.NextFunction) {
   try {
     console.log('======LOGGER B======');
     next();
@@ -26,11 +18,7 @@ export async function loggerB(
   }
 }
 
-export async function loggerC(
-  _: express.Request,
-  _R: express.Response,
-  next: express.NextFunction,
-) {
+export async function loggerC(_: express.Request, _R: express.Response, next: express.NextFunction) {
   try {
     console.log('======LOGGER C======');
     next();
