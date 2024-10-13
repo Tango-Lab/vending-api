@@ -37,6 +37,7 @@ export class MachineSlotServiceImpl extends BaseServiceImpl<IMachineSlot> {
         machine,
         slotNo: item.slotNo,
         product: item.product,
+        availableQuantity: { $ne: 0 },
       });
 
       if (machineSlot) {
