@@ -27,7 +27,7 @@ export class MachineController {
     if (type) {
       Object.assign(filter, { type });
     }
-    const user = await this.machineSv.getAllWithPagination(pagination, filter);
+    const user = await this.machineSv.getAllWithPagination(pagination, filter, { createdAt: -1 });
     return user;
   }
 
