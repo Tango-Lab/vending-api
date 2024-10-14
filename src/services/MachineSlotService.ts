@@ -8,6 +8,7 @@ import MachineSlot, { IMachineSlot } from '../models/MachineSlot';
 
 export interface MachineSlotService extends BaseService<IMachineSlot> {
   getAllWithPopulated: (query?: FilterQuery<IMachineSlot>, populated?: string | string[]) => Promise<IMachineSlot[]>;
+  getTotalAvailableQuantity: (slotNo: string, machine: string) => Promise<number>;
   updateAvailableQuantity: (machine: string, orderItems: IOrderItem[], session?: ClientSession) => Promise<void>;
 }
 
@@ -17,6 +18,20 @@ export class MachineSlotServiceImpl extends BaseServiceImpl<IMachineSlot> {
 
   constructor() {
     super();
+  }
+
+  async getTotalAvailableQuantity(slotNo: string, machine: string): Promise<number> {
+    const total = await MachineSlot.aggregate([
+      { $match: { slotNo, machine } }, // Filter by slotNo
+      {
+        $group: {
+          _id: null, // No specific grouping
+          totalAvailableQuantity: { $sum: "$availableQuantity" } // Sum available quantities
+        }
+      }
+    ]);
+
+    return total.length > 0 ? total[0].totalAvailableQuantity : 0;
   }
 
   async updateAvailableQuantity(machine: string, orderItems: IOrderItem[], session?: ClientSession) {
