@@ -7,7 +7,11 @@ import { UserStatus } from '../enums/UserStatus';
 import { UserServiceImpl } from '../services';
 import { verifyJWTToken } from '../utils/jwt';
 
-export default async function (req: express.Request, _R: express.Response, next: express.NextFunction) {
+export default async function (
+  req: express.Request,
+  _R: express.Response,
+  next: express.NextFunction,
+) {
   try {
     const authorization = req.headers['authorization'] ?? '';
     const [, token] = authorization.split(' ');

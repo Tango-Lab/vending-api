@@ -11,7 +11,12 @@ export class AccessToken {
 
   type: string;
 
-  constructor(accessToken: string, expiresIn: Date | number, userId: string, type: string = TokenType.Bearer) {
+  constructor(
+    accessToken: string,
+    expiresIn: Date | number,
+    userId: string,
+    type: string = TokenType.Bearer,
+  ) {
     this.accessToken = accessToken;
     this.expiresIn = expiresIn;
     this.userId = userId;

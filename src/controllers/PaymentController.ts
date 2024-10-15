@@ -2,7 +2,15 @@ import * as express from 'express';
 import { inject, injectable } from 'inversify';
 import { ClientSession } from 'mongoose';
 
-import { BadRequestError, ContextRequest, Controller, GET, Middleware, NotFoundError, POST } from '../../packages';
+import {
+  BadRequestError,
+  ContextRequest,
+  Controller,
+  GET,
+  Middleware,
+  NotFoundError,
+  POST,
+} from '../../packages';
 import { TransactionManager } from '../base/TransactionManager';
 import { ErrorCode } from '../enums/ErrorCode';
 import { OrderStatus } from '../enums/Order';
@@ -10,7 +18,13 @@ import { TransactionStatus } from '../enums/Transaction';
 import { ExpressHelper } from '../helpers';
 import { GenericParamsChecker, ValidationRulesMap } from '../helpers/ValidationParamHelper';
 import { IPaymentParam, IPaymentStatusParam, validatePaymentParam } from '../middlewares/Payments';
-import { BakongService, MachineSlotService, OrderService, PaymentService, TransactionService } from '../services';
+import {
+  BakongService,
+  MachineSlotService,
+  OrderService,
+  PaymentService,
+  TransactionService,
+} from '../services';
 
 @Controller('/payments')
 @injectable()
@@ -69,7 +83,9 @@ export class PaymentController {
   }
 
   @POST('/v1/status')
-  async checkTransactionStatus(@ContextRequest request: express.Request<any, any, IPaymentStatusParam>) {
+  async checkTransactionStatus(
+    @ContextRequest request: express.Request<any, any, IPaymentStatusParam>,
+  ) {
     const rules: ValidationRulesMap<IPaymentStatusParam> = {
       transactionId: { isRequired: true, isObjectId: true },
     };
@@ -79,7 +95,10 @@ export class PaymentController {
       _id: param.transactionId,
     });
     if (!transaction) {
-      throw new NotFoundError('We don`t have this transaction.', ErrorCode.TransactionDoesNotExisted);
+      throw new NotFoundError(
+        'We don`t have this transaction.',
+        ErrorCode.TransactionDoesNotExisted,
+      );
     }
 
     if (transaction.status === TransactionStatus.Completed) {
@@ -96,12 +115,19 @@ export class PaymentController {
 
     const bakong = await this.bakongSv.checkAccountStatus(transaction.paymentMetadata);
     if (!bakong.data) {
-      throw new NotFoundError('This Transaction have`t completed yet.', ErrorCode.TransactionHaveNotCompletedYet);
+      throw new NotFoundError(
+        'This Transaction have`t completed yet.',
+        ErrorCode.TransactionHaveNotCompletedYet,
+      );
     }
 
     const paymentData = bakong.data;
     const result = await new TransactionManager().runs(async (session: ClientSession) => {
-      const result = await this.transactionSv.singTransactionIsCompleted(transaction.id, paymentData, session);
+      const result = await this.transactionSv.singTransactionIsCompleted(
+        transaction.id,
+        paymentData,
+        session,
+      );
       await this.orderSv.signOrderCompleted(order.id, session);
       await this.machineSlotSv.updateAvailableQuantity(order.machine as any, order.items, session);
       return result;

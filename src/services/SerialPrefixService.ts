@@ -13,7 +13,10 @@ export interface SerialPrefixService extends BaseService<ISerialPrefix> {
 }
 
 @injectable()
-export class SerialPrefixServiceImpl extends BaseServiceImpl<ISerialPrefix> implements SerialPrefixService {
+export class SerialPrefixServiceImpl
+  extends BaseServiceImpl<ISerialPrefix>
+  implements SerialPrefixService
+{
   model = SerialPrefix;
 
   constructor() {

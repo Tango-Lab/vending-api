@@ -16,6 +16,7 @@ export interface VerificationService {
 
 @injectable()
 export class VerificationServiceImpl implements VerificationService {
+
   @inject('UserService')
   userService!: UserService;
 
@@ -50,7 +51,10 @@ export class VerificationServiceImpl implements VerificationService {
     return verification;
   }
 
-  async #findTheLatestOneByType(recipient: string, type = VerificationType.EMAIL) {
+  async #findTheLatestOneByType(
+    recipient: string,
+    type = VerificationType.EMAIL,
+  ) {
     const verification = await Verification.findOne({ recipient, type })
       .sort({ createdAt: -1 }) // Sort by `createdAt` in descending order
       .limit(1);

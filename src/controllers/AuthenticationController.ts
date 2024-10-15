@@ -14,7 +14,9 @@ export class AuthenticationController {
   userService!: UserService;
 
   @POST('/v1/login')
-  async createUserLogin(@ContextRequest request: express.Request<any, any, IUser>): Promise<AccessToken> {
+  async createUserLogin(
+    @ContextRequest request: express.Request<any, any, IUser>,
+  ): Promise<AccessToken> {
     const param = request.body;
     const token = await this.userService.login(param.username, param.password);
     return token;
@@ -40,7 +42,9 @@ export class AuthenticationController {
   }
 
   @POST('/v1/sign-up')
-  async createSignUp(@ContextRequest request: express.Request<any, any, IUser>): Promise<AccessToken> {
+  async createSignUp(
+    @ContextRequest request: express.Request<any, any, IUser>,
+  ): Promise<AccessToken> {
     const param = request.body;
     const token = await this.userService.signUp(param);
     return token;
@@ -48,7 +52,9 @@ export class AuthenticationController {
 
   @POST('/v1/exhibition/sign-up')
   @Middleware(VerifyExhibitionToken)
-  async createExhibitionUser(@ContextRequest request: express.Request<any, any, IUser>): Promise<AccessToken> {
+  async createExhibitionUser(
+    @ContextRequest request: express.Request<any, any, IUser>,
+  ): Promise<AccessToken> {
     if (!request.email) {
       throw new MissingParamError('email');
     }

@@ -124,7 +124,11 @@ export class GenericParamsChecker<T> {
     if (rules.itemRules) {
       array.forEach((item, index) => {
         for (const [key, itemRules] of Object.entries(rules.itemRules as ValidationRules)) {
-          this.#validateField(item[key], `${fieldName}[${index}].${key}`, itemRules as ValidationRules);
+          this.#validateField(
+            item[key],
+            `${fieldName}[${index}].${key}`,
+            itemRules as ValidationRules,
+          );
         }
       });
     }

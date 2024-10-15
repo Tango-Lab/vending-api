@@ -14,9 +14,15 @@ import { SerialPrefixService } from './SerialPrefixService';
 export interface OrderService extends BaseService<IOrder> {
   sumQuantitiesById: (param: OrderRequestParams) => OrderProductsRequestParam[];
   createOrder: (param: OrderRequestParams, ip: string, items: IOrderItem[]) => Promise<IOrder>;
-  calculateProductTotalInSlots: (machinesSlot: IMachineSlot[], param: OrderProductsRequestParam[]) => IOrderItem[];
+  calculateProductTotalInSlots: (
+    machinesSlot: IMachineSlot[],
+    param: OrderProductsRequestParam[],
+  ) => IOrderItem[];
   signOrderCompleted: (id: string, session?: ClientSession) => Promise<void>;
-  getAllOrdersWithPagination: (pagination: IPagination, filter?: FilterQuery<IOrder>) => Promise<IResponseList<IOrder>>;
+  getAllOrdersWithPagination: (
+    pagination: IPagination,
+    filter?: FilterQuery<IOrder>,
+  ) => Promise<IResponseList<IOrder>>;
   findOrderOneById: (id: string) => Promise<IOrder>;
 }
 
@@ -132,10 +138,14 @@ export class OrderServiceImpl extends BaseServiceImpl<IOrder> implements OrderSe
     return Object.values(summedQuantities);
   }
 
-  calculateProductTotalInSlots(machinesSlots: IMachineSlot[], products: OrderProductsRequestParam[]) {
+  calculateProductTotalInSlots(
+    machinesSlots: IMachineSlot[],
+    products: OrderProductsRequestParam[],
+  ) {
     return products.map(({ id, slotNo, quantity: toBuyQuantity }): IOrderItem => {
       const machine = machinesSlots.find(
-        ({ slotNo: machineSlotNo, product }) => product.toString() === id.toString() && machineSlotNo === slotNo,
+        ({ slotNo: machineSlotNo, product }) =>
+          product.toString() === id.toString() && machineSlotNo === slotNo,
       );
 
       if (!machine) {
@@ -145,7 +155,9 @@ export class OrderServiceImpl extends BaseServiceImpl<IOrder> implements OrderSe
       const { price: machinePrice, availableQuantity: machineQuantity, product } = machine;
 
       if (toBuyQuantity > machineQuantity) {
-        throw new BadRequestError(`Requested quantity '${toBuyQuantity}' exceeds available stock for product '${id}'.`);
+        throw new BadRequestError(
+          `Requested quantity '${toBuyQuantity}' exceeds available stock for product '${id}'.`,
+        );
       }
 
       if (machinePrice === 0) {

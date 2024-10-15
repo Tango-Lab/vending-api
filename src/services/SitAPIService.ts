@@ -49,7 +49,11 @@ export class SitAPIServiceImpl implements SitAPIService {
     const bodyParam = { md5 };
     const headers = { Authorization: token };
 
-    const data = await this.#POST<AccountTransactionResponse>('/v1/check_transaction_by_md5', bodyParam, headers);
+    const data = await this.#POST<AccountTransactionResponse>(
+      '/v1/check_transaction_by_md5',
+      bodyParam,
+      headers,
+    );
     return data; // Return the token
   }
 

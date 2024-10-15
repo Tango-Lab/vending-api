@@ -1,22 +1,5 @@
 # Release Notes
 
-## v1.0.1-beta [15-Oct-2024]
-
-### Fixes
-
-- **Product Module:**
-
-  - Added ordering by created date (DESC) on the admin product listing page.
-  - Removed unused APIs in the product listing functionality.
-
-- **Vending Machine Module:**
-
-  - Updated the logic to adjust the available quantity when restocking instead of inserting a new record.
-
-- **LINT:**
-
-  - Improved linting throughout the source code.
-
 ## v1.0.0-beta [13-Oct-2024]
 
 ### Features

@@ -7,9 +7,15 @@ import { IOrderItem } from '../models';
 import MachineSlot, { IMachineSlot } from '../models/MachineSlot';
 
 export interface MachineSlotService extends BaseService<IMachineSlot> {
-  getAllWithPopulated: (query?: FilterQuery<IMachineSlot>, populated?: string | string[]) => Promise<IMachineSlot[]>;
-  getTotalAvailableQuantity: (slotNo: string, machine: string) => Promise<number>;
-  updateAvailableQuantity: (machine: string, orderItems: IOrderItem[], session?: ClientSession) => Promise<void>;
+  getAllWithPopulated: (
+    query?: FilterQuery<IMachineSlot>,
+    populated?: string | string[],
+  ) => Promise<IMachineSlot[]>;
+  updateAvailableQuantity: (
+    machine: string,
+    orderItems: IOrderItem[],
+    session?: ClientSession,
+  ) => Promise<void>;
 }
 
 @injectable()
@@ -20,28 +26,17 @@ export class MachineSlotServiceImpl extends BaseServiceImpl<IMachineSlot> {
     super();
   }
 
-  async getTotalAvailableQuantity(slotNo: string, machine: string): Promise<number> {
-    const total = await MachineSlot.aggregate([
-      { $match: { slotNo, machine } }, // Filter by slotNo
-      {
-        $group: {
-          _id: null, // No specific grouping
-          totalAvailableQuantity: { $sum: '$availableQuantity' }, // Sum available quantities
-        },
-      },
-    ]);
-
-    return total.length > 0 ? total[0].totalAvailableQuantity : 0;
-  }
-
-  async updateAvailableQuantity(machine: string, orderItems: IOrderItem[], session?: ClientSession) {
+  async updateAvailableQuantity(
+    machine: string,
+    orderItems: IOrderItem[],
+    session?: ClientSession,
+  ) {
     for (const item of orderItems) {
       // Find the corresponding machine slot
       let machineSlot = await MachineSlot.findOne({
         machine,
         slotNo: item.slotNo,
         product: item.product,
-        availableQuantity: { $ne: 0 },
       });
 
       if (machineSlot) {

@@ -12,6 +12,12 @@ export class ProductController {
   @inject('ProductService')
   productSv!: ProductService;
 
+  @GET('/v1/list')
+  async getAllProduct() {
+    const user = await this.productSv.getAll();
+    return user;
+  }
+
   @GET('/v1/admin/list')
   async getAllProductForAdmin(@ContextRequest request: Request<any, any, IMachine>) {
     const { name, type } = request.query;
@@ -26,7 +32,7 @@ export class ProductController {
       Object.assign(filter, { type });
     }
 
-    const lists = await this.productSv.getAllWithPagination(pagination, filter, { createdAt: -1 });
+    const lists = await this.productSv.getAllWithPagination(pagination, filter);
     return lists;
   }
 
