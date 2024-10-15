@@ -1,7 +1,5 @@
 import mongoose, { Document, Model, Schema } from 'mongoose';
 
-
-
 export interface IMachineSlot extends Document {
   slotNo: string;
   price: number;

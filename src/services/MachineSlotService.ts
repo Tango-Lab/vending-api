@@ -26,9 +26,9 @@ export class MachineSlotServiceImpl extends BaseServiceImpl<IMachineSlot> {
       {
         $group: {
           _id: null, // No specific grouping
-          totalAvailableQuantity: { $sum: "$availableQuantity" } // Sum available quantities
-        }
-      }
+          totalAvailableQuantity: { $sum: '$availableQuantity' }, // Sum available quantities
+        },
+      },
     ]);
 
     return total.length > 0 ? total[0].totalAvailableQuantity : 0;
