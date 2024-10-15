@@ -1,7 +1,5 @@
 import mongoose, { Document, Model, Schema } from 'mongoose';
 
-import { State } from '../enums/State';
-
 export interface IMachineSlot extends Document {
   slotNo: string;
   price: number;
@@ -14,7 +12,6 @@ export interface IMachineSlot extends Document {
   sensorAddress: string;
   productExpirationDate: Date;
   //
-  state: number;
   machine: mongoose.Types.ObjectId; // Optional field for referencing products
   product: mongoose.Types.ObjectId; // Optional field for referencing products
 }
@@ -48,11 +45,6 @@ const MachineSlotSchema: Schema<IMachineSlot> = new Schema(
       type: Number,
       required: true,
       min: 0, // Ensure the capacity is at least 1
-    },
-    state: {
-      type: Number,
-      required: true,
-      default: State.Active,
     },
     lastRestock: {
       type: Date,
@@ -96,9 +88,6 @@ const MachineSlotSchema: Schema<IMachineSlot> = new Schema(
 );
 
 // Create the MachineSlot model
-const MachineSlot: Model<IMachineSlot> = mongoose.model<IMachineSlot>(
-  'MachineSlot',
-  MachineSlotSchema,
-);
+const MachineSlot: Model<IMachineSlot> = mongoose.model<IMachineSlot>('MachineSlot', MachineSlotSchema);
 
 export default MachineSlot;

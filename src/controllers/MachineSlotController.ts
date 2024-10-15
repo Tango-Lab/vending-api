@@ -1,7 +1,18 @@
 import { Request } from 'express';
 import { inject, injectable } from 'inversify';
 
-import { ContextRequest, Controller, DELETE, GET, NotFoundError, POST, PUT } from '../../packages';
+import {
+  Authorization,
+  BadRequestError,
+  ContextRequest,
+  Controller,
+  DELETE,
+  GET,
+  MissingParamError,
+  NotFoundError,
+  POST,
+  PUT,
+} from '../../packages';
 import { IMachineSlot } from '../models/MachineSlot';
 import { MachineService, MachineSlotService, ProductService } from '../services';
 import { Pagination } from '../utils/Pagination';
@@ -24,7 +35,8 @@ export class MachineSlotController {
     if (!machineId) {
       return [];
     }
-    const items = await this.machineSlotSv.getAllWithPopulated({ machine: machineId }, ['product']);
+    const filter = { machine: machineId };
+    const items = await this.machineSlotSv.getAllWithPopulated(filter, ['product']);
     return items;
   }
 
@@ -35,20 +47,36 @@ export class MachineSlotController {
   }
 
   @GET('/v1/admin/list')
+  @Authorization
   async getAllForAdmin(@ContextRequest request: Request<any, any, IMachineSlot>) {
     const pagination = new Pagination(request).getParam();
-    const list = await this.machineSlotSv.getAllWithPagination(pagination, {}, {}, [
-      'machine',
-      'product',
-    ]);
+    const list = await this.machineSlotSv.getAllWithPagination(pagination, {}, {}, ['machine', 'product']);
     return list;
   }
 
   @POST('/v1/create')
+  @Authorization
   async createMachine(@ContextRequest request: Request<any, any, IMachineSlot>) {
     let data = request.body;
-    data.availableQuantity = data.quantity;
 
+    if (!data.slotNo) {
+      throw new MissingParamError('slotNo');
+    }
+
+    if (data.quantity <= 0) {
+      throw new BadRequestError('quantity cant be less than zero');
+    }
+
+    let slot = await this.machineSlotSv.findOne({ slotNo: data.slotNo, machine: data.machine });
+    if (slot) {
+      slot.lastRestock = new Date();
+      slot.availableQuantity += data.quantity;
+      slot.quantity = slot.availableQuantity;
+      const response = await this.machineSlotSv.findOneByIdAndUpdate(slot.id, slot);
+      return response;
+    }
+
+    data.availableQuantity = data.quantity;
     const machineProduct = await this.machineSlotSv.create(data);
     return machineProduct;
   }
@@ -85,9 +113,7 @@ export class MachineSlotController {
     slot.slotNo = body.slotNo;
     slot.price = body.price;
     slot.note = body.note;
-    slot = await this.machineSlotSv.findOneByIdAndUpdate(id, slot, {
-      new: true,
-    });
+    slot = await this.machineSlotSv.findOneByIdAndUpdate(id, slot, { new: true });
     return slot;
   }
 

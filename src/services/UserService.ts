@@ -23,7 +23,6 @@ export interface UserService {
 
 @injectable()
 export class UserServiceImpl implements UserService {
-
   async login(username: string, password: string) {
     let user = await this.findOne({
       username: username,
