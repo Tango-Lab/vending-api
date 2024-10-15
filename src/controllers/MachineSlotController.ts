@@ -1,7 +1,18 @@
 import { Request } from 'express';
 import { inject, injectable } from 'inversify';
 
-import { Authorization, BadRequestError, ContextRequest, Controller, DELETE, GET, MissingParamError, NotFoundError, POST, PUT } from '../../packages';
+import {
+  Authorization,
+  BadRequestError,
+  ContextRequest,
+  Controller,
+  DELETE,
+  GET,
+  MissingParamError,
+  NotFoundError,
+  POST,
+  PUT,
+} from '../../packages';
 import { IMachineSlot } from '../models/MachineSlot';
 import { MachineService, MachineSlotService, ProductService } from '../services';
 import { Pagination } from '../utils/Pagination';
@@ -26,7 +37,7 @@ export class MachineSlotController {
     }
     const filter = { machine: machineId };
     const items = await this.machineSlotSv.getAllWithPopulated(filter, ['product']);
-    const a = items.map((row) => ({ quantity: `${row.quantity}` }));
+    const a = items.map((row) => ({ quantity: `${row.quantity}`, availableQuantity: `${row.availableQuantity}` }));
     return a;
   }
 
