@@ -24,8 +24,10 @@ export class MachineSlotController {
     if (!machineId) {
       return [];
     }
-    const items = await this.machineSlotSv.getAllWithPopulated({ machine: machineId }, ['product']);
-    return items;
+    const filter = { machine: machineId };
+    const items = await this.machineSlotSv.getAllWithPopulated(filter, ['product']);
+    const a = items.map((row) => ({ quantity: `${row.quantity}` }));
+    return a;
   }
 
   @GET('/v1/list')
