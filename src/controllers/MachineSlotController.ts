@@ -71,6 +71,7 @@ export class MachineSlotController {
     if (slot) {
       slot.lastRestock = new Date();
       slot.availableQuantity += data.quantity;
+      slot.quantity = slot.availableQuantity;
       const response = await this.machineSlotSv.findOneByIdAndUpdate(slot.id, slot);
       return response;
     }
