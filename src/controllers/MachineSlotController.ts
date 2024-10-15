@@ -37,8 +37,7 @@ export class MachineSlotController {
     }
     const filter = { machine: machineId };
     const items = await this.machineSlotSv.getAllWithPopulated(filter, ['product']);
-    const a = items.map((row) => ({ quantity: `${row.quantity}`, availableQuantity: `${row.availableQuantity}` }));
-    return a;
+    return 'asdasd';
   }
 
   @GET('/v1/list')
