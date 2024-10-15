@@ -37,15 +37,7 @@ export class MachineSlotController {
     }
     const filter = { machine: machineId };
     const items = await this.machineSlotSv.getAllWithPopulated(filter, ['product']);
-    const response = items.map((row) => ({
-      product: row.product,
-      slotNo: row.slotNo,
-      price: row.price?.toString(),
-      note: row.note,
-      quantity: row.quantity.toString(),
-      availableQuantity: row.availableQuantity.toString(),
-    }));
-    return response;
+    return items;
   }
 
   @GET('/v1/list')
