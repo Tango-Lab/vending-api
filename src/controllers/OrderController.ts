@@ -7,11 +7,7 @@ import { Currency } from '../enums/Currency';
 import { ErrorCode } from '../enums/ErrorCode';
 import { OrderStatus } from '../enums/Order';
 import { ExpressHelper, OrderRequestParams } from '../helpers';
-import {
-  ensureVendingMachineIsAvailable,
-  validateCancelOrderParam,
-  validateOrderParam,
-} from '../middlewares/VendingMachine';
+import { ensureVendingMachineIsAvailable, validateCancelOrderParam, validateOrderParam } from '../middlewares/VendingMachine';
 import { IOrder } from '../models';
 import { MachineService, MachineSlotService, OrderService } from '../services';
 import { Pagination } from '../utils/Pagination';
@@ -32,11 +28,15 @@ export class OrderController {
   @Authorization
   async getAllOrderWithPagination(@ContextRequest request: Request<any, any, OrderRequestParams>) {
     const pagination = new Pagination(request).getParam();
-    const { machine } = request.query;
+    const { machine, status } = request.query;
     const filterQuery: FilterQuery<IOrder> = {};
 
     if (machine) {
       Object.assign(filterQuery, { machine });
+    }
+
+    if (status) {
+      Object.assign(filterQuery, { orderStatus: status });
     }
 
     const data = await this.orderSv.getAllOrdersWithPagination(pagination, filterQuery);
