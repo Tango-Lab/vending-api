@@ -1,4 +1,5 @@
 import mongoose, { Document, Model, Schema } from 'mongoose';
+import { State } from '../enums/State';
 
 export interface IMachineSlot extends Document {
   slotNo: string;
