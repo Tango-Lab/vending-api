@@ -1,4 +1,5 @@
 import mongoose, { Document, Model, Schema } from 'mongoose';
+import { State } from '../enums/State';
 
 export interface IMachineSlot extends Document {
   slotNo: string;
@@ -14,6 +15,7 @@ export interface IMachineSlot extends Document {
   //
   machine: mongoose.Types.ObjectId; // Optional field for referencing products
   product: mongoose.Types.ObjectId; // Optional field for referencing products
+  isActive: boolean;
 }
 
 // Define the MachineSlot schema
@@ -70,6 +72,11 @@ const MachineSlotSchema: Schema<IMachineSlot> = new Schema(
       type: String,
       required: false,
       default: null,
+    },
+    isActive: {
+      type: Boolean,
+      required: false,
+      default: true,
     },
     machine: { type: Schema.Types.ObjectId, ref: 'Machine', required: true },
     product: { type: Schema.Types.ObjectId, ref: 'Product', required: true },

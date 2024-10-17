@@ -12,7 +12,7 @@ import { IPagination, IResponseList, Paginator } from '../utils/Paginator';
 import { SerialPrefixService } from './SerialPrefixService';
 
 export interface OrderService extends BaseService<IOrder> {
-  sumQuantitiesById: (param: OrderRequestParams) => OrderProductsRequestParam[];
+  sumQuantitiesBySlotNo: (param: OrderRequestParams) => OrderProductsRequestParam[];
   createOrder: (param: OrderRequestParams, ip: string, items: IOrderItem[]) => Promise<IOrder>;
   calculateProductTotalInSlots: (machinesSlot: IMachineSlot[], param: OrderProductsRequestParam[]) => IOrderItem[];
   signOrderCompleted: (id: string, session?: ClientSession) => Promise<void>;
@@ -109,11 +109,11 @@ export class OrderServiceImpl extends BaseServiceImpl<IOrder> implements OrderSe
     return response;
   }
 
-  sumQuantitiesById({ products }: OrderRequestParams) {
+  sumQuantitiesBySlotNo({ products }: OrderRequestParams) {
     const summedQuantities = products.reduce(
       (accumulator, product) => {
-        // Create a unique key for the product id
-        const key = product.id;
+        // Create a unique key for the product slotNo
+        const key = product.slotNo;
 
         // If the id already exists in the accumulator, add the quantity
         if (accumulator[key]) {
@@ -140,6 +140,10 @@ export class OrderServiceImpl extends BaseServiceImpl<IOrder> implements OrderSe
 
       if (!machine) {
         throw new NotFoundError(`Product '${id}' in slot '${slotNo}' is not available.`);
+      }
+
+      if (!machine.isActive) {
+        throw new BadRequestError(`Slot '${slotNo}' is not available.`);
       }
 
       const { price: machinePrice, availableQuantity: machineQuantity, product } = machine;
