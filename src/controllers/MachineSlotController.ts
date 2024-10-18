@@ -112,6 +112,7 @@ export class MachineSlotController {
     slot.availableQuantity = body.availableQuantity;
     slot.slotNo = body.slotNo;
     slot.price = body.price;
+    slot.isActive = body.isActive;
     slot.note = body.note;
     slot = await this.machineSlotSv.findOneByIdAndUpdate(id, slot, { new: true });
     return slot;

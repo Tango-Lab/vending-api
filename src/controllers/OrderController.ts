@@ -32,11 +32,15 @@ export class OrderController {
   @Authorization
   async getAllOrderWithPagination(@ContextRequest request: Request<any, any, OrderRequestParams>) {
     const pagination = new Pagination(request).getParam();
-    const { machine } = request.query;
+    const { machine, status } = request.query;
     const filterQuery: FilterQuery<IOrder> = {};
 
     if (machine) {
       Object.assign(filterQuery, { machine });
+    }
+
+    if (status) {
+      Object.assign(filterQuery, { orderStatus: status });
     }
 
     const data = await this.orderSv.getAllOrdersWithPagination(pagination, filterQuery);
@@ -68,7 +72,7 @@ export class OrderController {
       throw new NotFoundError('This vending machine does not existed.', ErrorCode.VendingMachineDoesNoExisted);
     }
 
-    const products = this.orderSv.sumQuantitiesById(param);
+    const products = this.orderSv.sumQuantitiesBySlotNo(param);
     const itemOrders = this.orderSv.calculateProductTotalInSlots(machineSlots, products);
 
     const ip = ExpressHelper.getClientIp(req);
