@@ -65,7 +65,9 @@ export class OrderController {
       throw new NotFoundError('This vending machine does not existed.', ErrorCode.VendingMachineDoesNoExisted);
     }
 
-    const machineSlots = await this.machineSlotSv.getAll({ machine: machine.id });
+    const machineSlots = await this.machineSlotSv.getAll({
+      machine: machine.id,
+    });
     if (!machineSlots.length) {
       throw new NotFoundError('This vending machine does not existed.', ErrorCode.VendingMachineDoesNoExisted);
     }
