@@ -1,5 +1,21 @@
 # Release Notes
 
+## v1.0.2-beta [18-Oct-2024]
+
+### Fixes
+
+- **Ordering Module:**
+
+  - Fixed issue where quantities were summed by id instead of by slot No.
+
+- **Vending Machine Module:**
+
+  - Added functionality to list vending machines ordered by createdAt.
+
+- **LINT:**
+
+  - Improved linting across the entire codebase for better code quality.
+
 ## v1.0.1-beta [15-Oct-2024]
 
 ### Fixes
