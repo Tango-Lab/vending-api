@@ -1,5 +1,13 @@
 # Release Notes
 
+## v1.0.3-beta
+
+### Fixes
+
+- **Ordering Module:**
+
+  - Updated the ordering process to ensure that all orders with a "pending" status are changed to "cancel" when a new order is placed.
+
 ## v1.0.2-beta [18-Oct-2024]
 
 ### Fixes

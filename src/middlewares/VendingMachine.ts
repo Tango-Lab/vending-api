@@ -5,6 +5,7 @@ import { MAX_PER_ORDER, MAX_QUANTITY } from '../constants';
 import { OrderStatus } from '../enums/Order';
 import { OrderRequestParams } from '../helpers';
 import { GenericParamsChecker, ValidationRulesMap } from '../helpers/ValidationParamHelper';
+import { Order } from '../models';
 import { OrderServiceImpl } from '../services';
 
 export function validateOrderParam(
@@ -67,14 +68,8 @@ export async function ensureVendingMachineIsAvailable(
     const orderService = new OrderServiceImpl();
     const { machine, serialNo } = req.body;
 
-    const machineIsStillPending = await orderService.findOne({
-      machine,
-      serialNo,
-      orderStatus: OrderStatus.Pending,
-    });
-    if (machineIsStillPending) {
-      throw new BadRequestError('Payment for this vending machine has not been completed yet');
-    }
+    const filter = { machine, serialNo, orderStatus: OrderStatus.Pending };
+    await Order.updateMany(filter, { $set: { orderStatus: OrderStatus.Cancelled } });
 
     next();
   } catch (error) {
