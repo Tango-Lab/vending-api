@@ -7,11 +7,7 @@ import { Currency } from '../enums/Currency';
 import { ErrorCode } from '../enums/ErrorCode';
 import { OrderStatus } from '../enums/Order';
 import { ExpressHelper, OrderRequestParams } from '../helpers';
-import {
-  ensureVendingMachineIsAvailable,
-  validateCancelOrderParam,
-  validateOrderParam,
-} from '../middlewares/VendingMachine';
+import { ensureVendingMachineIsAvailable, validateCancelOrderParam, validateOrderParam } from '../middlewares/VendingMachine';
 import { IOrder } from '../models';
 import { MachineService, MachineSlotService, OrderService } from '../services';
 import { Pagination } from '../utils/Pagination';
