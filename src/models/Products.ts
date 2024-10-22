@@ -25,6 +25,14 @@ const ProductSchema: Schema<IProduct> = new Schema(
   },
   {
     timestamps: true, // This will add createdAt and updatedAt fields
+    toObject: {
+      transform: function (_doc, ret) {
+        // Transform the _id field to id
+        ret.id = ret._id;
+        delete ret._id;
+        delete ret.__v;
+      },
+    },
     toJSON: {
       transform: function (_doc, ret) {
         // Transform the _id field to id
@@ -35,6 +43,9 @@ const ProductSchema: Schema<IProduct> = new Schema(
     },
   },
 );
+
+ProductSchema.set('toJSON', { virtuals: true });
+ProductSchema.set('toObject', { virtuals: true });
 
 // Create the Product model
 const Product: Model<IProduct> = mongoose.model<IProduct>('Product', ProductSchema);

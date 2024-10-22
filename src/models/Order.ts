@@ -129,7 +129,6 @@ const OrderSchema: Schema = new Schema({
   },
 });
 
-// Define a virtual field to populate products
 OrderSchema.virtual('payments', {
   ref: 'Transaction',
   localField: '_id',
