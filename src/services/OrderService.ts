@@ -40,7 +40,15 @@ export class OrderServiceImpl extends BaseServiceImpl<IOrder> implements OrderSe
       })
       .populate({
         path: 'payments',
-        select: ['paymentMethod', 'transactionNo', 'status', 'paymentTimestamp', 'paymentInfo'],
+        select: [
+          'paymentMethod',
+          'transactionNo',
+          'status',
+          'paymentTimestamp',
+          'hashBakongCode',
+          'paymentMetadata',
+          'paymentInfo',
+        ],
         options: { sort: { createdAt: -1 } },
       });
 
