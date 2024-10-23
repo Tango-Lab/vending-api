@@ -1,5 +1,6 @@
 import { REST } from '../../packages';
 import { BakongService, BakongServiceImpl } from './BakongTokenService';
+import { DashboardService, DashboardServiceImpl } from './DashboardService';
 import { MachineSlotService, MachineSlotServiceImpl } from './MachineSlotService';
 import { MachineService, MachineServiceImpl } from './MachinService';
 import { OrderService, OrderServiceImpl } from './OrderService';
@@ -22,6 +23,7 @@ REST.register('SerialPrefixService', SerialPrefixServiceImpl);
 REST.register('PaymentService', PaymentServiceImpl);
 REST.register('SitAPIService', SitAPIServiceImpl);
 REST.register('BakongService', BakongServiceImpl);
+REST.register('DashboardService', DashboardServiceImpl);
 
 export {
   UserService,
@@ -46,4 +48,6 @@ export {
   SitAPIServiceImpl,
   BakongService,
   BakongServiceImpl,
+  DashboardService,
+  DashboardServiceImpl,
 };

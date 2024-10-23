@@ -1,5 +1,6 @@
 import { REST } from '../../packages';
 import { AuthenticationController } from './AuthenticationController';
+import { DashboardController } from './DashboardController';
 import { FileController } from './FileController';
 import { MachineController } from './MachineController';
 import { MachineSlotController } from './MachineSlotController';
@@ -20,6 +21,7 @@ REST.register('MachineSlotController', MachineSlotController);
 REST.register('OrderController', OrderController);
 REST.register('SerialPrefixController', SerialPrefixController);
 REST.register('PaymentController', PaymentController);
+REST.register('DashboardController', DashboardController);
 
 export default [
   FileController,
@@ -32,4 +34,5 @@ export default [
   OrderController,
   SerialPrefixController,
   PaymentController,
+  DashboardController,
 ];
