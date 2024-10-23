@@ -75,6 +75,10 @@ const TransactionSchema: Schema<ITransaction> = new Schema<ITransaction>({
   updatedAt: { type: Date, default: Date.now, required: true },
 });
 
+// Ensure virtual fields are included when converting to JSON
+TransactionSchema.set('toJSON', { virtuals: true });
+TransactionSchema.set('toObject', { virtuals: true });
+
 // Create the Mongoose model
 const Transaction = mongoose.model<ITransaction>('Transaction', TransactionSchema);
 

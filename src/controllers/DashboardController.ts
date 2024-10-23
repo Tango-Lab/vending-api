@@ -4,7 +4,7 @@ import moment from 'moment-timezone';
 import { ITransaction } from 'src/models/Transaction';
 import { DashboardService } from 'src/services';
 
-import { BadRequestError, ContextRequest, Controller, GET } from '../../packages';
+import { Authorization, BadRequestError, ContextRequest, Controller, GET } from '../../packages';
 
 @Controller('/dashboards')
 @injectable()
@@ -13,6 +13,7 @@ export class DashboardController {
   dashboardSv!: DashboardService;
 
   @GET('/v1/revenue')
+  @Authorization
   async getTotalEarningToday(@ContextRequest request: Request<any, any, ITransaction>) {
     const timezone = 'Asia/Phnom_Penh';
     const { machine, from, to } = request.query;
