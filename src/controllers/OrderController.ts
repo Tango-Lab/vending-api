@@ -73,9 +73,14 @@ export class OrderController {
         header: 'Created At',
         key: 'createdAt',
       },
+      {
+        header: 'Complated At',
+        key: 'completedAt',
+      },
     ]);
 
     data.forEach((row) => {
+      const completedAt = (row as any).payments?.[0]?.paymentTimestamp ?? null;
       workbook.addRow({
         orderNo: row.orderNo,
         totalAmount: row.totalAmount,
@@ -83,6 +88,7 @@ export class OrderController {
         machine: (row.machine as any)?.name,
         orderStatus: FormatHelper.formatOrderStatus(row.orderStatus),
         createdAt: moment(row.createdAt).format('DD MMM yyyy hh:mm'),
+        completedAt: completedAt ? moment(completedAt).format('DD MMM yyyy hh:mm') : '',
       });
     });
 
