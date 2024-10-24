@@ -7,11 +7,8 @@ import { Currency } from '../enums/Currency';
 import { ErrorCode } from '../enums/ErrorCode';
 import { OrderStatus } from '../enums/Order';
 import { ExpressHelper, OrderRequestParams } from '../helpers';
-import {
-  ensureVendingMachineIsAvailable,
-  validateCancelOrderParam,
-  validateOrderParam,
-} from '../middlewares/VendingMachine';
+import { ExcelHelper } from '../helpers/ExcelHelper';
+import { ensureVendingMachineIsAvailable, validateCancelOrderParam, validateOrderParam } from '../middlewares/VendingMachine';
 import { IOrder } from '../models';
 import { MachineService, MachineSlotService, OrderService } from '../services';
 import { Pagination } from '../utils/Pagination';
@@ -27,6 +24,38 @@ export class OrderController {
 
   @inject('MachineService')
   machineSv!: MachineService;
+
+  @GET('/v1/download-excel')
+  async getAllOrderAsExcelBlob(@ContextRequest request: Request<any, any, OrderRequestParams>) {
+    const pagination = new Pagination(request).getParam();
+    const { machine, status } = request.query;
+    const filterQuery: FilterQuery<IOrder> = {};
+
+    if (machine) {
+      Object.assign(filterQuery, { machine });
+    }
+
+    if (status) {
+      Object.assign(filterQuery, { orderStatus: status });
+    }
+
+    const { data } = await this.orderSv.getAllOrdersWithPagination(pagination, filterQuery);
+
+    const workbook = new ExcelHelper('Transaction');
+    workbook.setColumns([
+      {
+        header: 'Order No',
+        key: 'orderNo',
+      }
+    ]);
+
+    data.forEach((row) => {
+      workbook.addRow({ orderNo: row.orderNo });
+    });
+
+    const file = await workbook.generated();
+    return file
+  }
 
   @GET('/v1/admin/list')
   @Authorization
