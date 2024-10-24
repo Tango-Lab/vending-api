@@ -8,10 +8,16 @@ import { ErrorCode } from '../enums/ErrorCode';
 import { OrderStatus } from '../enums/Order';
 import { ExpressHelper, OrderRequestParams } from '../helpers';
 import { ExcelHelper } from '../helpers/ExcelHelper';
-import { ensureVendingMachineIsAvailable, validateCancelOrderParam, validateOrderParam } from '../middlewares/VendingMachine';
+import {
+  ensureVendingMachineIsAvailable,
+  validateCancelOrderParam,
+  validateOrderParam,
+} from '../middlewares/VendingMachine';
 import { IOrder } from '../models';
 import { MachineService, MachineSlotService, OrderService } from '../services';
 import { Pagination } from '../utils/Pagination';
+import moment from 'moment';
+import { FormatHelper } from '../helpers/Format';
 
 @Controller('/orders')
 @injectable()
@@ -46,15 +52,46 @@ export class OrderController {
       {
         header: 'Order No',
         key: 'orderNo',
-      }
+      },
+      {
+        header: 'Amount',
+        key: 'totalAmount',
+      },
+      {
+        header: 'Currency',
+        key: 'currency',
+      },
+      {
+        header: 'Machine',
+        key: 'machine',
+      },
+      {
+        header: 'Status',
+        key: 'orderStatus',
+      },
+      {
+        header: 'Created At',
+        key: 'createdAt',
+      },
+      {
+        header: 'Complated At',
+        key: '',
+      },
     ]);
 
     data.forEach((row) => {
-      workbook.addRow({ orderNo: row.orderNo });
+      workbook.addRow({
+        orderNo: row.orderNo,
+        totalAmount: row.totalAmount,
+        currency: row.currency,
+        machine: (row.machine as any)?.name,
+        orderStatus: FormatHelper.formatOrderStatus(row.orderStatus),
+        createdAt: moment(row.createdAt).format('DD MMM yyyy hh:mm'),
+      });
     });
 
     const file = await workbook.generated();
-    return file
+    return file;
   }
 
   @GET('/v1/admin/list')
