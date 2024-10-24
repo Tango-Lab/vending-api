@@ -73,10 +73,6 @@ export class OrderController {
         header: 'Created At',
         key: 'createdAt',
       },
-      {
-        header: 'Complated At',
-        key: '',
-      },
     ]);
 
     data.forEach((row) => {
